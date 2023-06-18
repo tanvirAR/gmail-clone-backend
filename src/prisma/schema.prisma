@@ -1,0 +1,107 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+ // ________________________________________________________________________________________________
+
+model User {
+  id        String  @id @default(uuid())
+  firstName String
+  lastName  String
+  email     String
+  password  String
+  avatar    String?
+  name      String
+
+  sender       Mail[]         @relation("senderId")
+  receiver     Mail[]         @relation("receiverId")
+  draftEmails  DraftEmails[]
+
+  @@unique([email])
+}
+
+
+model Mail {
+  id         String   @id @default(uuid())
+  createdAt  DateTime @default(now())
+  sender     User     @relation("senderId", fields: [senderId], references: [id])
+  senderId   String
+  receiver   User     @relation("receiverId", fields: [receiverId], references: [id])
+  receiverId String
+  subject    String?
+  message    String?  @db.VarChar(2000)
+  attachment String?
+
+  senderEmail String
+  senderName  String
+
+  sendMailProperty    sendMailProperty?
+  receiveMailProperty receivedMailProperty?
+}
+
+model sendMailProperty {
+  id String @id @default(uuid())
+
+  mail   Mail   @relation(fields: [mailId], references: [id])
+  mailId String @unique
+
+  inbox     Boolean @default(false)
+  social    Boolean @default(false)
+  promotion Boolean @default(false)
+
+  read Boolean? @default(false)
+
+  deleted          Boolean  @default(false)
+  trashBin         Boolean  @default(false)
+  sent             Boolean  @default(true)
+  starred          Boolean  @default(false)
+  important        Boolean  @default(false)
+  snooze           Boolean  @default(false)
+  snoozedTime      DateTime @default(now())
+  draft            Boolean  @default(false)
+  scheduleSend     Boolean  @default(false)
+  scheduleSendTime Boolean  @default(false)
+  spam             Boolean  @default(false)
+}
+
+model receivedMailProperty {
+  id String @id @default(uuid())
+
+  mail   Mail   @relation(fields: [mailId], references: [id])
+  mailId String @unique
+
+  inbox     Boolean @default(true)
+  social    Boolean @default(false)
+  promotion Boolean @default(false)
+
+  read             Boolean? @default(false)
+  deleted          Boolean  @default(false)
+  trashBin         Boolean  @default(false)
+  starred          Boolean  @default(false)
+  important        Boolean  @default(false)
+  snooze           Boolean  @default(false)
+  snoozedTime      DateTime @default(now())
+  draft            Boolean  @default(false)
+  spam             Boolean  @default(false)
+  scheduleSend     Boolean  @default(false)
+  scheduleSendTime Boolean  @default(false)
+}
+
+model DraftEmails {
+  id      String  @id @default(uuid())
+  to      String?
+  subject String?
+  message String?
+  user    User    @relation(fields: [userId], references: [id])
+  userId  String
+}
+
+

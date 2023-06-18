@@ -1,0 +1,6 @@
+-- AlterTable
+ALTER TABLE `receivedmailproperty` ADD COLUMN `snoozedTime` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3);
+
+-- AlterTable
+ALTER TABLE `sendmailproperty` ADD COLUMN `snooze` BOOLEAN NOT NULL DEFAULT false,
+    ADD COLUMN `snoozedTime` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3);
