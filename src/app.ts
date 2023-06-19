@@ -53,24 +53,8 @@ main()
 dotenv.config();
 
 
-// app.use(cors({ credentials: true, origin: ["https://gmail-clone-ar.vercel.app", "wss://gmail-clone-ar.vercel.app"] }));
-const allowedOrigins = [
-  "https://gmail-clone-ar.vercel.app",
-  "wss://gmail-clone-ar.vercel.app",
-];
+app.use(cors({ credentials: true, origin: process.env.client }));
 
-const corsOptions = {
-  origin: (origin, callback) => {
-    if (allowedOrigins.includes(origin) || allowedOrigins.includes(`${origin}/`)) {
-      callback(null, true);
-    } else {
-      callback(new Error("Not allowed by CORS"));
-    }
-  },
-  credentials: true,
-};
-
-app.use(cors(corsOptions));
 
 
 // request parsers
