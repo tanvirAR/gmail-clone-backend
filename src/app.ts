@@ -53,7 +53,7 @@ main()
 dotenv.config();
 
 
-app.use(cors({ credentials: true, origin: process.env.client }));
+app.use(cors({ credentials: true, origin: [process.env.client, "wss://gmail-clone-ar.vercel.app"] }));
 
 
 // request parsers
